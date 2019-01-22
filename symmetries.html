@@ -1,0 +1,403 @@
+
+<section>
+    <section class="intro" id="SpinW">
+        <div class="logo-wrapper">
+            <div class="logo"><span class="visually-hidden">SpinW</span></div>
+        </div>
+    </section>
+    
+    <section class="title" id="title">
+        <div class="grid-wrapper">
+            <div class="header">
+                <!-- Remove logo--full class to only show brand mark -->
+                <div class="logo logo--full"><span class="visually-hidden">SpinW</span></div>
+            </div>
+            <div class="content">
+                <h1>Symmetry in SpinW</h1>
+                <div class="description">
+                    A tutorial on how to use symmetries in SpinW
+                </div>
+            </div>
+            <div class="credit">
+                <hr/>
+                <div class="label">Presented By</div>
+                <div class="name">Simon Ward</div>
+                <div class="role">Scientific Software Developer - ESS</div>
+            </div>
+        </div>
+    </section>
+</section>
+
+<section>
+    <section class="subsection color--radiant" id="info_head">
+    <div class="grid-wrapper">
+        <div class="logo"></div>
+        <h1>Symmetries Review</h1>
+        <div class="description">
+            An overview of the symmetries.
+        </div>
+    </div>
+    </section>
+
+    <section class="blank" id="crystalSyms">
+        <div class="grid-wrapper">
+            <div class="header">
+                <div class="logo"></div>
+                <div class="section">Crystal symmetries</div>
+            </div>
+            <content>
+                <p>
+                    The space group generators are stored in the <code>symmetry.dat</code> file, and <code>spinw.lattice.sym</code> stores
+                    all symmetry operators of the space group<br>
+                </p>
+                <p>All 230 standard spacegroups are supported.</p>
+                <code style="font-size:0.75rem">
+                    <p style="line-height:0.25rem">204 I m -3 : x+1/2,y+1/2,z+1/2; -x,-y,z; -x,y,-z; z,x,y; -x,-y,-z</p>
+                    <p style="line-height:0.75rem; background-color:#EEEDEF ">205 P a -3 : -x+1/2,-y,z+1/2; -x,y+1/2,-z+1/2; z,x,y; -x,-y,-z</p>
+                    <p style="line-height:0.25rem">206 I a -3 : x+1/2,y+1/2,z+1/2; -x+1/2,-y,z+1/2; -x,y+1/2,-z+1/2; z,x,y; -x,-y,-z</p>
+                </code>
+                <p>You can add your own symmetry to the <code>symmetry.dat</code> file or supply it directly.</p>
+                <br>
+                <p>Form of symmetry string:</p>
+                <figure class="code">
+                    <pre><code class="matlab">symStr = '-z, y+3/4, x+3/4; z+3/4, -y, x+3/4; z+3/4, y+3/4, -x; y+3/4, x+3/4, -z; x+3/4, -z, y+3/4; -z, x+3/4, y+3/4';</code></pre>
+                </figure>
+                <p>Applying the symmetry:</p>
+                <figure class="code">
+                    <pre><code class="matlab">
+s.genlattice('lat_const', [3 3 3], 'angled', [90 90 90], 'spgr', symStr, 'label', 'F d -3 m Z')</code></pre>
+                </figure>
+            </content>
+        </div>
+    </section>
+
+
+    <section class="blank" id="important">
+        <div class="grid-wrapper">
+            <div class="header">
+                <div class="logo"></div>
+                <div class="section">Interaction symmetries</div>
+            </div>
+            <content>
+                <h3>Interaction symmetries</h3>
+                <ul>
+                    <li>Point group at bond center determines $J_{i,j}$</li>
+                    <li>Few rules:
+                        <ul>
+                            <li>Inversion symmetry $\rightarrow J_A = 0$</li>
+                            <li>Mirror plane $\rightarrow D_\perp = 0$</li>
+                            <li>2-fold rotation $\rightarrow D \parallel C_2$</li>
+                        </ul>
+                    </li>
+                    <li>Transformation under $(R, \mathbf{t})$ symmetry operators:</li>
+                </ul>
+                <br>
+                $$ \begin{align}
+                J_{i^\prime	,j^\prime} & = RJ_{i,j}R^{-1} \\
+                \mathbf{r}_{i^\prime	} & = R\mathbf{r}_i + \mathbf{t} \\
+                \mathbf{r}_{j^\prime	} & = R\mathbf{r}_j + \mathbf{t}
+                \end{align}$$
+            </content>
+        </div>
+    </section>
+
+    <section class="blank" id="transformations">
+        <div class="grid-wrapper">
+            <div class="header">
+                <div class="logo"></div>
+                <div class="section"> Rotational transformations </div>
+            </div>
+            <content>
+                <p>We have three types of tensor variable: <b>polar vector, axial vector, 2d tensors.</b></p>
+                <p>The respective transformation rules using orthogonal matrices are:</p>
+                <!--\[\begin{aligned}-->
+                <!--\nu^{'} &amp; = R\nu \\-->
+                <!--\nu^{'} &amp; = \det(R)R\nu \\-->
+                <!--T^{'} &amp; = RTR^{T}-->
+                <!--\end{aligned} \]-->
+                $$\begin{aligned}
+                \nu^{'} &amp; = R\nu \\
+                \nu^{'} &amp; = \det(R)R\nu \\
+                T^{'} &amp; = RTR^{T}
+                \end{aligned}$$
+                <p>Where $\nu$ is a column vector.</p>
+                <p>To generate transformation matrices use:</p>
+                <p>Rotation:</p>
+                <figure class="code">
+                    <pre><code class="matlab"> R = sw_rotmat(rotAxis, rotAngle);</code></pre>
+                </figure>
+                <p>Mirroring:</p>
+                <figure class="code">
+                    <pre><code class="matlab">[~, R] = sw_mirror(normalAxis);</code></pre>
+                </figure>
+            </content>
+        </div>
+    </section>
+
+    <section class="blank" id="SymmetryAnalysis">
+    <div class="grid-wrapper">
+        <div class="header">
+            <div class="logo"></div>
+            <div class="section">Symmetry Analysis</div>
+        </div>
+        <content>
+            <p>Determine the symmetry allowed elements of the matrices with <code>spinw.getmatrix</code> or <code>spinw.setmatrix</code>.
+                <br>Most common usage settings:</p>
+            <p>Text output of the possible matrix elements.</p>
+            <figure class="code">
+                <pre><code class="matlab">spinw.getmatrix('mat', 'J1');</code></pre>
+            </figure>
+            <p>Which for example gives the following output:</p>
+            <figure class="code">
+                <pre><code class="console">The symmetry analysis of the coupling between atom 1 and atom 2:
+lattice translation vector: [0,0,0]
+distance: 3.546 Angstrom
+center of bond (in lattice units): [0.500,0.375,0.375]
+label of the assigned matrix: 'J1'
+allowed elements in the symmetric matrix:
+  S = | C| 0| 0|
+      | 0| A| B|
+      | 0| B| A|
+
+allowed components of the Dzyaloshinskii-Moriya vector:
+  D = [ 0 , D1,-D1]</code></pre>
+            </figure>
+        </content>
+    </div>
+</section>
+
+    <section class="blank" id="SymmetryAnalysis2">
+        <div class="grid-wrapper">
+            <div class="header">
+                <div class="logo"></div>
+                <div class="section">Symmetry Analysis</div>
+            </div>
+            <content>
+                <p>Matrix output of the possible modes, D: [3 3 nModes].</p>
+                <figure class="code">
+                    <pre><code class="matlab">normModes = spinw.getmatrix('mat', 'J1');</code></pre>
+                </figure>
+                <p>Assigning pre-factors for the calculated modes and save them into the <code>J1</code> matrix</p>
+                <figure class="code">
+                    <pre><code class="matlab">A = 1; B = 2; C = 3;
+spinw.setmatrix('mat', 'J1', 'pref', [A, B, C]);</code></pre>
+                </figure>
+
+            </content>
+        </div>
+    </section>
+
+</section>
+
+<section>
+    <section class="subsection color--radiant" id="tutorial_head">
+        <div class="grid-wrapper">
+            <div class="logo"></div>
+            <h1>Playing with symmetry</h1>
+            <div class="description">
+                An overview of the application of symmetry. Download the worksheet <a href="matlab/sw_tutorial_05.m" target="_blank"><code style="color: white">sw_tutorial_05</code></a>
+            </div>
+        </div>
+    </section>
+
+    <section class="subsection  color--light" id="Ex5_intro">
+        <div class="grid-wrapper">
+            <div class="logo"></div>
+            <h1>Analysing the Dzyaloshinskii-Moriya vector</h1>
+            <div class="description">
+                Exploring the symmetry capabilities of SpinW by analysing Dzyaloshinskii-Moriya vectors.
+            </div>
+        </div>
+    </section>
+
+
+    <section class="blank color--dark" id="Ex5_1">
+        <div class="grid-wrapper">
+            <div class="header">
+                <div class="logo"></div>
+                <div class="section">Basic Symmetry Analysis</div>
+            </div>
+            <content>
+                <p>We will demonstrate the symmetry analysis capabilities of SpinW in this
+                    script. We determine the allowed elements of the Dzyaloshinskii-Moriya
+                    vector on a bond that is perpendicular to a mirror plane. The result is
+                    well known and can be compared to the SpinW output. We use here
+                    explicitly the mirror plane as the only symmetry operator. Also we will
+                    draw the plane to demonstrate the plotting functions of SpinW.
+                </p>
+                <figure class="code">
+                    <pre><code class="matlab">model = spinw;
+model.genlattice('lat_const',[6 4 4],'sym','-x,y,z','label','m_x')
+model.addatom('r',[3/8 1/2 1/2],'S',1)
+plot(model)
+
+model.gencoupling
+model.addmatrix('label','DM1','value',1);
+model.addcoupling('mat','DM1','bond',1)
+plot(model)
+model.getmatrix('mat','DM1');</code></pre>
+                </figure><br>
+                <h3>Questions</h3>
+                <p><i>Look at the result of <code>getmatrix</code>. How many DM vectors are allowed for this bond in thi
+                    symmetry?</i></p>
+            </content>
+        </div>
+    </section>
+
+    <section class="blank color--dark" id="Ex5_2">
+        <div class="grid-wrapper">
+            <div class="header">
+                <div class="logo"></div>
+                <div class="section">Draw the 2 allowed DM components</div>
+            </div>
+            <content>
+                <h2>Draw the 2 allowed DM components</h2>
+                <p>Add two DM vector that span the allowed plane.
+                </p>
+                <figure class="code">
+                    <pre><code class="matlab">model.addmatrix('label','DM1','value',[0 1 0],'color','blue')
+model.addmatrix('label','DM2','value',[0 0 1],'color','purple')
+model.addcoupling('mat','DM1','bond',1)
+model.addcoupling('mat','DM2','bond',1)
+plot(model,'bondScale',1)</code></pre>
+                </figure>
+            </content>
+        </div>
+    </section>
+
+    <section class="blank color--dark" id="Ex5_3">
+        <div class="grid-wrapper">
+            <div class="header">
+                <div class="logo"></div>
+                <div class="section">Mirror plane including the bond</div>
+            </div>
+            <content>
+                <h2>Mirror plane including the bond</h2>
+                <p>The second example show the case when the mirror plane includes the bond.
+                </p>
+                <figure class="code">
+                    <pre><code class="matlab">model = spinw;
+model.genlattice('lat_const',[4 6 4],'sym','-x,y,z','label','m_x')
+model.addatom('r',[1/2 3/8 1/2],'S',1)
+model.addatom('r',[1/2 5/8 1/2],'S',1)
+
+model.quickham(1)
+plot(model)
+model.getmatrix('mat','J1');</code></pre>
+                </figure>
+            </content>
+        </div>
+    </section>
+
+    <section class="blank color--dark" id="Ex5_4">
+        <div class="grid-wrapper">
+            <div class="header">
+                <div class="logo"></div>
+                <div class="section">DM interaction using space groups</div>
+            </div>
+            <content>
+                <div class="container" style="display: grid;    grid-template-columns: 47.5% 5% auto; height: 100%;">
+                    <div style="grid-column-start:1; grid-column-end:2">
+                        <h2>DM interaction using P4 space group</h2>
+                        <figure class="code">
+                    <pre><code class="matlab">cryst=spinw;
+cryst.genlattice('sym','P 4','lat_const',[8 8 6])
+cryst.addatom('r',[1/4 1/4 0],'S',1);
+cryst.gencoupling;
+cryst.addmatrix('label','D','value',[1 -1 0])
+cryst.addcoupling('mat','D','bond',2)
+
+plot(cryst,'range',[1 1 1/2])</code></pre>
+                        </figure>
+                    </div>
+                    <div style="grid-column-start:3; grid-column-end:4">
+                        <h2>DM interaction using P0 space group</h2>
+                        <figure class="code">
+                    <pre><code class="matlab">cryst=spinw;
+cryst.genlattice('lat_const',[8 8 6])
+cryst.addatom('r',[1/4 1/4 0],'S',1);
+cryst.addatom('r',[3/4 1/4 0],'S',1);
+cryst.addatom('r',[1/4 3/4 0],'S',1);
+cryst.addatom('r',[3/4 3/4 0],'S',1);
+cryst.gencoupling
+cryst.addmatrix('label','D','value',[1 -1 0])
+cryst.addcoupling('mat','D','bond',1,'subIdx',[3 5 7:8])
+
+plot(cryst,'range',[1 1 1/2],'atomLegend',false)</code></pre>
+                        </figure>
+                    </div>
+                </div>
+            </content>
+        </div>
+    </section>
+
+    <section class="blank color--dark" id="Ex5_5">
+        <div class="grid-wrapper">
+            <div class="header">
+                <div class="logo"></div>
+                <div class="section">single ion anisotropy using space groups</div>
+            </div>
+            <content>
+                <div class="container" style="display: grid;    grid-template-columns: 47.5% 5% auto; height: 100%;">
+                    <div style="grid-column-start:1; grid-column-end:2">
+                        <h2>Single ion anisotropy using P4 space group</h2>
+                        <figure class="code">
+                    <pre><code class="matlab">cryst=spinw;
+cryst.genlattice('sym','P 4','lat_const',[8 8 6])
+cryst.addatom('r',[1/4 1/4 0],'S',1)
+cryst.gencoupling
+cryst.addmatrix('label','A','value',1-eye(3))
+cryst.addaniso('A')
+
+plot(cryst)</code></pre>
+                        </figure>
+                    </div>
+                    <div style="grid-column-start:3; grid-column-end:4">
+                        <h2>Single ion anisotropy using P0 space group</h2>
+                        <figure class="code">
+                    <pre><code class="matlab">cryst=spinw;
+cryst.genlattice('lat_const',[8 8 6])
+cryst.addatom('r',[1/4 1/4 0],'S',1)
+cryst.addatom('r',[3/4 1/4 0],'S',1)
+cryst.addatom('r',[1/4 3/4 0],'S',1)
+cryst.addatom('r',[3/4 3/4 0],'S',1)
+cryst.gencoupling
+cryst.addmatrix('label','A','value',1-eye(3))
+cryst.addaniso('A')
+
+plot(cryst,'atomLegend',false)</code></pre>
+                        </figure>
+                    </div>
+                </div>
+            </content>
+        </div>
+    </section>
+
+    <section class="subsection  color--light" id="Ex5_intro2">
+        <div class="grid-wrapper">
+            <div class="logo"></div>
+            <h1>Spin wave spectrum of the honeycomb lattice Na2IrO3</h1>
+            <div class="description">
+                We reproduce structure presented in the paper S. K. Choi, et al. PRL, <b>108</b>(12), 127204 (2012),
+                <a href="http://link.aps.org/doi/10.1103/PhysRevLett.108.127204" target="_blank"> PhysRevLett.108.127204</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="blank color--dark" id="Ex5_6">
+        <div class="grid-wrapper">
+            <div class="header">
+                <div class="logo"></div>
+                <div class="section">Spin wave spectrum of the honeycomb lattice Na2IrO3</div>
+            </div>
+            <content>
+                <h2>Spin wave spectrum of the honeycomb lattice Na2IrO3</h2>
+                <p>This system is a bit complex, follow the steps in the tutorial and try to understand what the plotting options do.
+                    <br> We will not try to reproduce the spin wave dispersion presented in the paper, but you can attempt it after the
+                magnetic structure tutorials.</p>
+            </content>
+        </div>
+    </section>
+
+</section>
+    
